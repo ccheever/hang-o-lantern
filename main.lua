@@ -83,7 +83,7 @@ end
 
 function draw_guessed()
     local x = 80
-    local y = 240
+    local y = 180
     local s = 30
     local p = 4
     for i = 1, #game_state.guessed do
@@ -102,7 +102,7 @@ function render_keyboard(f)
     -- drawing the keyboard and also handling touches
 
     local x = 20
-    local y = 220
+    local y = 200
     local s = 50
     local p = 12
 
@@ -188,7 +188,7 @@ function is_game_won()
     return true
 end
 
-function touchpressed(id, x, y, dx, dy, pressure)
+function mousepressed( x, y, button, istouch, presses )
     if game_state.state ~= 'play' then
         reset_game()
         return

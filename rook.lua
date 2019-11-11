@@ -67,6 +67,12 @@ function love.touchpressed(...)
     end
 end
 
+function love.mousepressed(...)
+    if iscallable(mousepressed) then
+        return mousepressed(...)
+    end
+end
+
 
 function randchoice(t)
     return t[math.random(#t)]
