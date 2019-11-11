@@ -1,27 +1,5 @@
 local iscallable = require "./iscallable"
 
--- -- Dump everything from `love` into the global namespace
-local function dump(t)
-    for name, val in pairs(t) do
-        if type(val) == 'table' then
-            -- print('table: ' .. name)
-            dump(val)
-        else
-            -- log('value: ' .. name .. ' = ', val)
-            if _G[name] ~= nil or name == 'draw' or name == 'load' or name == 'update' then
-                if _G[name] == val then
-                    -- print('redundant collision for ' .. name)
-                else
-                    -- print('collision around ' .. name)
-                end
-            else
-                -- print('Making global for ' .. name)
-                _G[name] = val
-            end
-        end
-    end
-end
-
 -- We set some values for these functions so
 -- that if you define `load` or `update` or `draw`,
 -- those will just be used; but if you define
@@ -71,12 +49,10 @@ function log(...)
     print(table.concat(out, ', '))
 end
 
--- dump(love.graphics)
 text = love.graphics.print
 drawGraphic = love.graphics.draw
 
 Object = require './classic'
-SpriteSheet = require './SpriteSheet'
 graphics = love.graphics
 
 function love.keypressed(...)
