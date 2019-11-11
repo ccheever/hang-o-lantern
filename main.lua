@@ -2,6 +2,7 @@ require 'rook'
 
 local spooky_words = require './spooky_words'
 
+-- The layout of a keyboard
 local qwerty = {
     {'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'},
     {'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'},
@@ -12,14 +13,13 @@ local game_state = {}
 
 function setup()
     init_game()
-    draw_keyboard()
 end
 
 function init_game()
     game_state = {
         state = 'play',
         word = randchoice(spooky_words),
-        guessed = {}, -- {"r", "s", "t", "l", "n", "e"},
+        guessed = {},
         wrong = {},
         strikes = 0
     }
@@ -120,6 +120,8 @@ function render_keyboard(f)
 end
 
 function draw_keyboard()
+    -- Draw a box with a letter in it at each position we want to render a key
+
     render_keyboard(
         function(letter, x, y, s, p, x_, y_)
             graphics.setColor(1, 1, 1, 0.25)
@@ -135,8 +137,6 @@ function reset_game()
 end
 
 function guess_letter(letter)
-    -- log('letter pressed', letter)
-
     -- Check to see if this letter has already been guessed
     for i = 1, #game_state.guessed do
         if letter == game_state.guessed[i] then
@@ -152,6 +152,8 @@ function guess_letter(letter)
         if string.sub(game_state.word, i, i) == letter then
             in_word = true
 
+            -- If we just guessed a letter that is in the word, then
+            -- maybe we just won; check for that
             if is_game_won() then
                 game_state.state = 'win'
             end
@@ -160,6 +162,8 @@ function guess_letter(letter)
         end
     end
 
+    -- If the letter isn't in the word, you get a strike
+    -- If you get too many strikes, you lose
     if not in_word then
         game_state.strikes = game_state.strikes + 1
         if game_state.strikes >= 5 then
@@ -169,6 +173,8 @@ function guess_letter(letter)
 end
 
 function is_game_won()
+    -- Loop over each letter in the word and check to see if its guessed
+    -- If every letter in the word has been guessed, then we win
     for i = 1, #game_state.word do
         local ic = string.sub(game_state.word, i, i)
         local guessed = false
@@ -179,6 +185,8 @@ function is_game_won()
                 break
             end
         end
+
+        -- N.B. Spaces don't have to be guessed
         if not guessed and ic ~= ' ' then
             return false
         end
@@ -188,7 +196,9 @@ function is_game_won()
     return true
 end
 
-function mousepressed( x, y, button, istouch, presses )
+-- Handle taps and mouseclicks the same way, by checking to see if they are
+-- inside any boxes in the virtual keyboard
+function mousepressed(x, y, button, istouch, presses)
     if game_state.state ~= 'play' then
         reset_game()
         return
@@ -203,6 +213,8 @@ function mousepressed( x, y, button, istouch, presses )
     )
 end
 
+-- Handle keypresses so that if you're playing on desktop, you can
+-- use your physical keyboard
 function keypressed(key, scancode, isrepeat)
     if game_state.state ~= 'play' then
         if key == 'space' then
@@ -211,6 +223,8 @@ function keypressed(key, scancode, isrepeat)
         return
     end
 
+    -- Check to make sure that the length of `key` is one so we
+    -- don't guess things like 'rshift' etc.
     if key >= 'a' and key <= 'z' and #key == 1 then
         guess_letter(key)
     end
