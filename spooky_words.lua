@@ -38,7 +38,7 @@ return {
     'werewolves',
     'fright',
     'fright night',
-    'cemetary',
+    'cemetery',
     'cobwebs',
     'spider',
     'tarantula',

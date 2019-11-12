@@ -9,10 +9,23 @@ local qwerty = {
     {'z', 'x', 'c', 'v', 'b', 'n', 'm'}
 }
 
-local game_state = {}
+local game_state
+
+local frames
+local font
 
 function setup()
     init_game()
+    draw_keyboard()
+    load_scene_frames()
+    font = graphics.newFont(30)
+end
+
+function load_scene_frames()
+    frames = {}
+    for i = 0, 6 do
+        frames[i] = graphics.newImage("./img" .. i .. "@3x.png")
+    end
 end
 
 function init_game()
@@ -30,29 +43,43 @@ function reset()
 end
 
 function draw()
+    draw_strikes()
     draw_keyboard()
     draw_word()
     draw_guessed()
     draw_state()
 end
 
-function draw_state()
-    local x = 200
-    local y = 80
+function draw_strikes()
+    local s = 800 / 294
+    local strikes = game_state.strikes
+    if strikes > 6 then strikes = 6 end
     graphics.setColor(1, 1, 1, 1)
-    graphics.print(game_state.state, x, y)
-    graphics.print(game_state.strikes .. ' strikes', x, y + 20)
+    graphics.draw(frames[strikes], 0, 0, 0)
+end
+
+
+function draw_state()
+    local x = 220
+    local y = 720
+    graphics.setColor(1, 1, 1, 1)
+    -- graphics.print(game_state.state, x, y)
+    -- graphics.print(game_state.strikes .. ' strikes', x, y + 20)
     if game_state.state ~= 'play' then
-        graphics.print('The word was ' .. game_state.word, x, y + 40)
-        graphics.print('Tap anywhere or press space to play again', x, y + 60)
+        graphics.setFont(font)
+        graphics.setColor(1, 1, 1, 1)
+        graphics.print("You " .. game_state.state .. "!", x, y + 25)
+        graphics.print('The word was ', x, y + 50)
+        graphics.print(string.upper(game_state.word), x, y + 75, 0, 2, 2)
+        graphics.print('Tap to play again', x, y + 150)
     end
 end
 
 function draw_word()
-    x = 20
-    y = 30
-    s = 28
-    p = 8
+    local x = 20
+    local y = 1200
+    local s = 36
+    local p = 10
 
     for i = 1, #game_state.word do
         local c = string.sub(game_state.word, i, i)
@@ -69,28 +96,30 @@ function draw_word()
         if c == ' ' then
             -- skip spaces
         else
-            graphics.setColor(1, 1, 1, 0.4)
-            graphics.rectangle('line', x_, y_, s, s)
+            graphics.setColor(1, 0.5, 0, 1) -- fc6800
+            graphics.rectangle('fill', x_, y_, s, s + p)
             local dc = '_'
             if reveal then
                 dc = c
             end
-            graphics.setColor(1, 1, 1, 1)
-            graphics.print(dc, x_ + p / 2, y_ + p / 2)
+            graphics.setColor(0.2, 0.2, 0.2, 1)
+            graphics.setFont(font)
+            graphics.print(string.upper(dc), x_ + p / 2, y_ + p / 2)
         end
     end
 end
 
 function draw_guessed()
-    local x = 80
-    local y = 180
+    local x = 20
+    local y = 20
     local s = 30
     local p = 4
     for i = 1, #game_state.guessed do
         local x_ = x + (i - 1) * (s + p)
         local y_ = y
-        graphics.setColor(1, 1, 1, 0.8)
-        graphics.print(game_state.guessed[i], x_, y_)
+        graphics.setColor(1, 1, 1, 1)
+        graphics.setFont(font)
+        graphics.print(string.upper(game_state.guessed[i]), x_, y_)
     end
 end
 
@@ -102,7 +131,7 @@ function render_keyboard(f)
     -- drawing the keyboard and also handling touches
 
     local x = 20
-    local y = 200
+    local y = 920
     local s = 50
     local p = 12
 
