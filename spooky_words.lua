@@ -30,7 +30,8 @@ return {
     'freddy krueger',
     'saw',
     'creepy',
-    'headless horseman',
+    -- 'headless horseman', -- Too long 
+    'ichabod crane',
     'decapitated',
     'raven',
     'edgar allen poe',
@@ -59,7 +60,6 @@ return {
     'pumpkin',
     'apple cider',
     'pumpkin spice',
-    'pumpkin spice latte',
     'pumpkin carving',
     'jack o lantern',
     'mausoleum',
@@ -83,7 +83,7 @@ return {
     'scream',
     'michael myers',
     'jason voorhees',
-    'friday the thirteenth',
+    -- 'friday the thirteenth', -- Too long 
     'october',
-    'october thirty first'
+    -- 'october thirty first', -- Too long
 }
