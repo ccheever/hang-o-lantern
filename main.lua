@@ -16,9 +16,8 @@ local font
 
 function setup()
     init_game()
-    draw_keyboard()
-    load_scene_frames()
     font = graphics.newFont(30)
+    load_scene_frames()
 end
 
 function load_scene_frames()
@@ -53,7 +52,7 @@ end
 function draw_strikes()
     local s = 800 / 294
     local strikes = game_state.strikes
-    if strikes > 6 then strikes = 6 end
+    if strikes >= 5 then strikes = 6 end
     graphics.setColor(1, 1, 1, 1)
     graphics.draw(frames[strikes], 0, 0, 0)
 end
@@ -77,7 +76,7 @@ end
 
 function draw_word()
     local x = 20
-    local y = 1200
+    local y = 980
     local s = 36
     local p = 10
 
@@ -130,9 +129,9 @@ function render_keyboard(f)
     -- This way, we can use the same code/logic for
     -- drawing the keyboard and also handling touches
 
-    local x = 20
-    local y = 920
-    local s = 50
+    local x = -40
+    local y = 1040
+    local s = 60
     local p = 12
 
     for row = 1, #qwerty do
@@ -150,13 +149,15 @@ end
 
 function draw_keyboard()
     -- Draw a box with a letter in it at each position we want to render a key
+    local o = 4
 
     render_keyboard(
         function(letter, x, y, s, p, x_, y_)
             graphics.setColor(1, 1, 1, 0.25)
             graphics.rectangle('fill', x_, y_, s, s)
             graphics.setColor(0, 0, 0, 1)
-            graphics.print(letter, x_ + p / 2, y_ + p / 2)
+            graphics.setFont(font)
+            graphics.print(string.upper(letter), x_ + p / 2 + o, y_ + p / 2 + o)
         end
     )
 end
