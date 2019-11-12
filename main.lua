@@ -24,7 +24,7 @@ end
 function load_scene_frames()
     frames = {}
     for i = 0, 6 do
-        frames[i] = graphics.newImage("./img" .. i .. "@3x.png")
+        frames[i] = graphics.newImage("img" .. i .. "@3x.png")
     end
 end
 
